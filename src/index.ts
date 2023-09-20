@@ -13,6 +13,7 @@ import connectDB from "./config/connectDB";
 import corsOptions from "./config/corsOptions";
 import credentials from "./middlewares/credentials";
 import loggerMiddleware from "./middlewares/loggerMiddleware";
+import errorHandler from "./middlewares/errorMiddleware";
 
 dotenv.config();
 const app = express();
@@ -45,6 +46,9 @@ app.use(morgan("tiny"));
 
 // ?: By doing this, you can make your application a bit more secure by not revealing the specific technology stack it's built on.
 app.disable("x-powered-by");
+
+// ?: Global Error middleware
+app.use(errorHandler);
 
 connectDB().then(() =>
   app.listen(PORT, () =>
