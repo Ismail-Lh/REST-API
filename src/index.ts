@@ -1,17 +1,18 @@
 import "express-async-errors";
 
-import bodyParser from "body-parser";
+import express from "express";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import express from "express";
 import dotenv from "dotenv";
+import helmet from "helmet";
+import morgan from "morgan";
 
 import connectDB from "./config/connectDB";
 
-import loggerMiddleware from "./middlewares/loggerMiddleware";
-import credentials from "./middlewares/credentials";
 import corsOptions from "./config/corsOptions";
+import credentials from "./middlewares/credentials";
+import loggerMiddleware from "./middlewares/loggerMiddleware";
 
 dotenv.config();
 const app = express();
@@ -25,9 +26,25 @@ app.use(credentials);
 
 app.use(cors(corsOptions));
 
-app.use(compression());
+// ?: Middleware to parse URL-encoded data
+app.use(express.urlencoded({ extended: false }));
+
+// ?: built-in middleware for json
+app.use(express.json());
+
 app.use(cookieParser());
-app.use(bodyParser.json());
+
+// ?: compress all responses
+app.use(compression());
+
+// ?: Helps secure Express apps by setting HTTP response headers
+app.use(helmet());
+
+// ?: HTTP request logger middleware
+app.use(morgan("tiny"));
+
+// ?: By doing this, you can make your application a bit more secure by not revealing the specific technology stack it's built on.
+app.disable("x-powered-by");
 
 connectDB().then(() =>
   app.listen(PORT, () =>
