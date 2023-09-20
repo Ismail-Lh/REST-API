@@ -11,6 +11,7 @@ import connectDB from "./config/connectDB";
 
 import loggerMiddleware from "./middlewares/loggerMiddleware";
 import credentials from "./middlewares/credentials";
+import corsOptions from "./config/corsOptions";
 
 dotenv.config();
 const app = express();
@@ -22,11 +23,7 @@ app.use(loggerMiddleware);
 
 app.use(credentials);
 
-app.use(
-  cors({
-    credentials: true,
-  })
-);
+app.use(cors(corsOptions));
 
 app.use(compression());
 app.use(cookieParser());
