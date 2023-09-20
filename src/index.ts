@@ -1,3 +1,5 @@
+import "express-async-errors";
+
 import bodyParser from "body-parser";
 import compression from "compression";
 import cookieParser from "cookie-parser";
