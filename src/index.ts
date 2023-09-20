@@ -10,6 +10,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/connectDB";
 
 import loggerMiddleware from "./middlewares/loggerMiddleware";
+import credentials from "./middlewares/credentials";
 
 dotenv.config();
 const app = express();
@@ -18,6 +19,8 @@ const PORT = process.env.PORT || 8080;
 const NODE_ENV = process.env.NODE_ENV;
 
 app.use(loggerMiddleware);
+
+app.use(credentials);
 
 app.use(
   cors({
