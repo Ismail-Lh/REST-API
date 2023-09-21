@@ -19,4 +19,12 @@ const errorHandler = (
   res.status(status).json({ message: err.message });
 };
 
-export default errorHandler;
+const notFoundRoute = (req: Request, res: Response, next: NextFunction) => {
+  const error = new Error(`Route Not Found - ${req.originalUrl}`);
+
+  res.status(404);
+
+  next(error);
+};
+
+export { errorHandler, notFoundRoute };

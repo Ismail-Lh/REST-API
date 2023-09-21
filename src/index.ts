@@ -13,7 +13,7 @@ import connectDB from "./config/connectDB";
 import corsOptions from "./config/corsOptions";
 import credentials from "./middlewares/credentials";
 import loggerMiddleware from "./middlewares/loggerMiddleware";
-import errorHandler from "./middlewares/errorMiddleware";
+import { errorHandler, notFoundRoute } from "./middlewares/errorMiddleware";
 
 dotenv.config();
 const app = express();
@@ -48,6 +48,7 @@ app.use(morgan("tiny"));
 app.disable("x-powered-by");
 
 // ?: Global Error middleware
+app.use(notFoundRoute);
 app.use(errorHandler);
 
 connectDB().then(() =>
