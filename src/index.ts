@@ -9,11 +9,13 @@ import helmet from "helmet";
 import morgan from "morgan";
 
 import connectDB from "./config/connectDB";
-
 import corsOptions from "./config/corsOptions";
+
 import credentials from "./middlewares/credentials";
 import loggerMiddleware from "./middlewares/loggerMiddleware";
 import { errorHandler, notFoundRoute } from "./middlewares/errorMiddleware";
+
+import userRoutes from "./routes/userRoutes";
 
 dotenv.config();
 const app = express();
@@ -46,6 +48,9 @@ app.use(morgan("tiny"));
 
 // ?: By doing this, you can make your application a bit more secure by not revealing the specific technology stack it's built on.
 app.disable("x-powered-by");
+
+// ?: General Routes
+app.use("/api/v1/users", userRoutes);
 
 // ?: Global Error middleware
 app.use(notFoundRoute);
