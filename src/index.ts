@@ -16,6 +16,7 @@ import loggerMiddleware from "./middlewares/loggerMiddleware";
 import { errorHandler, notFoundRoute } from "./middlewares/errorMiddleware";
 
 import userRoutes from "./routes/userRoutes";
+import authRoutes from "./routes/authRoutes";
 
 dotenv.config();
 const app = express();
@@ -51,6 +52,7 @@ app.disable("x-powered-by");
 
 // ?: General Routes
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/auth", authRoutes);
 
 // ?: Global Error middleware
 app.use(notFoundRoute);

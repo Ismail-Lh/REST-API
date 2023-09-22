@@ -1,7 +1,11 @@
 import { NextFunction, Response, Request } from "express";
 import User from "../models/User";
 
-export const checkDuplicateUser = async (req: Request, next: NextFunction) => {
+export const checkDuplicateUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { username, email } = req.body;
 
   const existingUser = await User.findOne({ $or: [{ username }, { email }] })
