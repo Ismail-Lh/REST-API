@@ -1,4 +1,6 @@
 import { Request, Response } from "express";
+import bcrypt from "bcryptjs";
+
 import User from "../models/User";
 
 type responseProps = {
@@ -41,4 +43,30 @@ export const register = async (req: Request, res: Response) => {
     res.status(409).json({
       message: "Email address already used! Please try another address!",
     });
+};
+
+export const login = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  if (!email || !password)
+    res.status(400).json({ message: "All fields are required!" });
+
+  const user = await User.findOne({ email }).exec();
+
+  if (!user)
+    res.status(401).json({
+      message: "Unauthorized user, invalid email address. Please try again.",
+    });
+
+  const isPasswordMatched = await bcrypt.compare(password, user?.password);
+
+  if (!isPasswordMatched)
+    res.status(401).json({
+      message: "Unauthorized user, invalid password. Please try again.",
+    });
+
+  res.status(200).json({
+    message: "Login Successfully...",
+    username: user.username,
+  });
 };

@@ -22,11 +22,6 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// !: Compare the password
-userSchema.methods.matchPassword = async function (enteredPassword: string) {
-  return await bcrypt.compare(enteredPassword, this.password);
-};
-
 // !: Password encryption (hashing)
 userSchema.pre("save", async function (next: NextFunction) {
   if (!this.isModified("password")) next();
