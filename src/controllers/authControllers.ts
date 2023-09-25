@@ -3,11 +3,10 @@ import bcrypt from "bcryptjs";
 
 import User from "../models/User";
 
-type responseProps = {
-  statusCode: number;
-  message: string;
-  data?: object;
-};
+const isPasswordMatched = async (
+  enteredPassword: string,
+  userPassword: string
+) => await bcrypt.compare(enteredPassword, userPassword);
 
 export const register = async (req: Request, res: Response) => {
   // @ts-ignore
@@ -57,9 +56,9 @@ export const login = async (req: Request, res: Response) => {
       message: "Unauthorized user, invalid email address. Please try again.",
     });
 
-  const isPasswordMatched = await bcrypt.compare(password, user?.password);
+  const isMatched = isPasswordMatched(password, user?.password);
 
-  if (!isPasswordMatched)
+  if (!isMatched)
     res.status(401).json({
       message: "Unauthorized user, invalid password. Please try again.",
     });
