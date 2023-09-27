@@ -1,12 +1,8 @@
 import { Request, Response } from "express";
-import bcrypt from "bcryptjs";
 
 import User from "../models/User";
-
-const isPasswordMatched = async (
-  enteredPassword: string,
-  userPassword: string
-) => await bcrypt.compare(enteredPassword, userPassword);
+import generateTokens from "../helpers/generateToken";
+import isPasswordsMatched from "../helpers/isPasswordsMatched";
 
 export const register = async (req: Request, res: Response) => {
   // @ts-ignore
@@ -56,15 +52,30 @@ export const login = async (req: Request, res: Response) => {
       message: "Unauthorized user, invalid email address. Please try again.",
     });
 
-  const isMatched = isPasswordMatched(password, user?.password);
+  const isMatched = await isPasswordsMatched(password, user?.password);
 
   if (!isMatched)
     res.status(401).json({
       message: "Unauthorized user, invalid password. Please try again.",
     });
 
+  const [accessToken, refreshToken] = generateTokens({
+    username: user.username,
+    email: user.email,
+    userId: user._id,
+  });
+
+  // ?: Creates Secure Cookie with refresh token
+  res.cookie("token", refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+
   res.status(200).json({
     message: "Login Successfully...",
     username: user.username,
+    accessToken,
   });
 };

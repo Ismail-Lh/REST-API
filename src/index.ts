@@ -36,6 +36,7 @@ app.use(express.urlencoded({ extended: false }));
 // ?: built-in middleware for json
 app.use(express.json());
 
+// ?: Middleware for cookies
 app.use(cookieParser());
 
 // ?: compress all responses
