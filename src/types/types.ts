@@ -29,7 +29,6 @@ export type TypedRequest<
   DeepPartial<ReqBody>,
   DeepPartial<QueryString>
 > & {
-  existingUser?: TUser;
   payload?: JwtPayload;
 };
 
@@ -48,3 +47,5 @@ export interface UserRegisterCredentials {
   email: string;
   password: string;
 }
+
+export type UserLoginCredentials = Omit<UserRegisterCredentials, "username">;

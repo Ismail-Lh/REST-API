@@ -23,7 +23,16 @@ export const checkDuplicateUser: ExpressMiddleware<CheckUserReq> = async (
     .lean()
     .exec();
 
-  req.existingUser = existingUser;
+  // !: Check for duplicate users
+  if (existingUser?.username === username)
+    res.status(409).json({
+      message: "Username already used! Please try another name!",
+    });
+
+  if (existingUser?.email === email)
+    res.status(409).json({
+      message: "Email address already used! Please try another address!",
+    });
 
   next();
 };
