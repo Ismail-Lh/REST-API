@@ -3,9 +3,18 @@ import { Request, Response } from "express";
 import User from "../models/User";
 import generateTokens from "../helpers/generateToken";
 import isPasswordsMatched from "../helpers/isPasswordsMatched";
-import { ExpressMiddleware, UserRegisterCredentials } from "../types/types";
+import {
+  ExpressMiddleware,
+  UserLoginCredentials,
+  UserRegisterCredentials,
+} from "../types/types";
 
 type RegisterRes = Record<"message", string>;
+
+type LoginRes = RegisterRes & {
+  username?: string;
+  accessToken?: string;
+};
 
 export const register: ExpressMiddleware<
   UserRegisterCredentials,
@@ -44,7 +53,10 @@ export const register: ExpressMiddleware<
     });
 };
 
-export const login = async (req: Request, res: Response) => {
+export const login: ExpressMiddleware<UserLoginCredentials, LoginRes> = async (
+  req,
+  res
+) => {
   const { email, password } = req.body;
 
   if (!email || !password)
