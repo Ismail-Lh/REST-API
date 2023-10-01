@@ -3,9 +3,14 @@ import { Request, Response } from "express";
 import User from "../models/User";
 import generateTokens from "../helpers/generateToken";
 import isPasswordsMatched from "../helpers/isPasswordsMatched";
+import { ExpressMiddleware, UserRegisterCredentials } from "../types/types";
 
-export const register = async (req: Request, res: Response) => {
-  // @ts-ignore
+type RegisterRes = Record<"message", string>;
+
+export const register: ExpressMiddleware<
+  UserRegisterCredentials,
+  RegisterRes
+> = async (req, res) => {
   const { existingUser } = req;
   const { username, email, password } = req.body;
 
