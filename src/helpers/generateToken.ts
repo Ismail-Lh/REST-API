@@ -12,7 +12,7 @@ const generateTokens = ({ username, email, userId }: generateTokensProps) => {
     { username, email, userId },
     process.env.ACCESS_TOKEN_KEY,
     {
-      expiresIn: "15m",
+      expiresIn: "1d",
     }
   );
 

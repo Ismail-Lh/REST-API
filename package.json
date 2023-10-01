@@ -37,6 +37,7 @@
     "helmet": "^7.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.5.2",
+    "utility-types": "^3.10.0",
     "uuid": "^9.0.1"
   }
 }

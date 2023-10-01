@@ -1,21 +1,19 @@
 import jwt, { type JwtPayload } from "jsonwebtoken";
 
 import User from "../models/User";
-import { ExpressMiddleware } from "../types/types";
-
-type CheckUserReq = {
-  username: string;
-  email: string;
-};
-
-type PRoutesRes = Record<"message", string>;
-type PRoutesReq = {};
+import {
+  CheckUserReq,
+  ExpressMiddleware,
+  PRoutesReq,
+  PRoutesRes,
+} from "../types/types";
 
 export const checkDuplicateUser: ExpressMiddleware<CheckUserReq> = async (
   req,
   res,
   next
 ) => {
+  const { payload } = req;
   const { username, email } = req.body;
 
   const existingUser = await User.findOne({ $or: [{ username }, { email }] })
@@ -24,16 +22,19 @@ export const checkDuplicateUser: ExpressMiddleware<CheckUserReq> = async (
     .exec();
 
   // !: Check for duplicate users
-  if (existingUser?.username === username)
-    res.status(409).json({
-      message: "Username already used! Please try another name!",
-    });
+  if (!payload || payload?.userId !== existingUser?._id.toString()) {
+    if (existingUser?.username === username)
+      res.status(409).json({
+        message: "Username already used! Please try another name!",
+      });
 
-  if (existingUser?.email === email)
-    res.status(409).json({
-      message: "Email address already used! Please try another address!",
-    });
+    if (existingUser?.email === email)
+      res.status(409).json({
+        message: "Email address already used! Please try another address!",
+      });
+  }
 
+  req.existingUser = existingUser;
   next();
 };
 

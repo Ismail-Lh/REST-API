@@ -4,19 +4,14 @@ import User from "../models/User";
 import {
   ExpressMiddleware,
   UserLoginCredentials,
+  UserLoginRes,
   UserRegisterCredentials,
+  UserRegisterRes,
 } from "../types/types";
-
-type RegisterRes = Record<"message", string>;
-
-type LoginRes = RegisterRes & {
-  username?: string;
-  accessToken?: string;
-};
 
 export const register: ExpressMiddleware<
   UserRegisterCredentials,
-  RegisterRes
+  UserRegisterRes
 > = async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -37,10 +32,10 @@ export const register: ExpressMiddleware<
   });
 };
 
-export const login: ExpressMiddleware<UserLoginCredentials, LoginRes> = async (
-  req,
-  res
-) => {
+export const login: ExpressMiddleware<
+  UserLoginCredentials,
+  UserLoginRes
+> = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password)

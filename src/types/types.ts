@@ -30,6 +30,7 @@ export type TypedRequest<
   DeepPartial<QueryString>
 > & {
   payload?: JwtPayload;
+  existingUser?: TUser;
 };
 
 export type ExpressMiddleware<
@@ -48,4 +49,20 @@ export interface UserRegisterCredentials {
   password: string;
 }
 
+export type UserRegisterRes = Record<"message", string>;
+
 export type UserLoginCredentials = Omit<UserRegisterCredentials, "username">;
+
+export type UserLoginRes = UserRegisterRes & {
+  username?: string;
+  accessToken?: string;
+};
+
+export type UpdateUserCredentials = Omit<UserRegisterCredentials, "password">;
+
+export type UpdateUserRes = Record<"message", string> & { user?: TUser };
+
+export type CheckUserReq = UpdateUserCredentials;
+
+export type PRoutesRes = Record<"message", string>;
+export type PRoutesReq = {};
