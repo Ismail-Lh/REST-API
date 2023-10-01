@@ -1,63 +1,12 @@
-import "express-async-errors";
-
-import express from "express";
-import compression from "compression";
-import cookieParser from "cookie-parser";
-import cors from "cors";
 import dotenv from "dotenv";
-import helmet from "helmet";
-import morgan from "morgan";
 
+import app from "./app";
 import connectDB from "./config/connectDB";
-import corsOptions from "./config/corsOptions";
-
-import credentials from "./middlewares/credentials";
-import loggerMiddleware from "./middlewares/loggerMiddleware";
-import { errorHandler, notFoundRoute } from "./middlewares/errorMiddleware";
-
-import userRoutes from "./routes/userRoutes";
-import authRoutes from "./routes/authRoutes";
 
 dotenv.config();
-const app = express();
 
 const PORT = process.env.PORT || 8080;
 const NODE_ENV = process.env.NODE_ENV;
-
-app.use(loggerMiddleware);
-
-app.use(credentials);
-
-app.use(cors(corsOptions));
-
-// ?: Middleware to parse URL-encoded data
-app.use(express.urlencoded({ extended: false }));
-
-// ?: built-in middleware for json
-app.use(express.json());
-
-// ?: Middleware for cookies
-app.use(cookieParser());
-
-// ?: compress all responses
-app.use(compression());
-
-// ?: Helps secure Express apps by setting HTTP response headers
-app.use(helmet());
-
-// ?: HTTP request logger middleware
-app.use(morgan("tiny"));
-
-// ?: By doing this, you can make your application a bit more secure by not revealing the specific technology stack it's built on.
-app.disable("x-powered-by");
-
-// ?: General Routes
-app.use("/api/v1/users", userRoutes);
-app.use("/api/v1/auth", authRoutes);
-
-// ?: Global Error middleware
-app.use(notFoundRoute);
-app.use(errorHandler);
 
 connectDB().then(() =>
   app.listen(PORT, () =>
