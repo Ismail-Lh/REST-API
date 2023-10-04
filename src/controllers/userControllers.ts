@@ -1,7 +1,7 @@
+import isPasswordsMatched from "../helpers/isPasswordsMatched";
 import User from "../models/User";
 import {
   ExpressMiddleware,
-  TUser,
   UpdateUserCredentials,
   UpdateUserRes,
 } from "../types/types";
@@ -37,7 +37,7 @@ export const getUser: ExpressMiddleware = async (req, res) => {
 };
 
 // *@desc   --> Update the current user profile
-// *@route  --> GET /api/v1/users/update-current-user
+// *@route  --> PATCH /api/v1/users/update-current-user
 // *@access --> private
 export const updateCurrentUser: ExpressMiddleware<
   UpdateUserCredentials,
@@ -60,4 +60,22 @@ export const updateCurrentUser: ExpressMiddleware<
   await user.save();
 
   res.status(201).json({ message: "user updated successfully!", user });
+};
+
+// *@desc   --> Update the current user password
+// *@route  --> PATCH /api/v1/users/update-password
+// *@access --> private
+export const updatePassword: ExpressMiddleware = async (req, res) => {
+  const { userId } = req.payload;
+  const newPassword = req.body.password as string;
+
+  const user = await User.findById(userId).exec();
+
+  user.password = newPassword;
+
+  await user.save();
+
+  res.status(200).json({
+    message: `${user.username} your password has successfully updated!`,
+  });
 };
