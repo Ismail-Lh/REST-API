@@ -1,4 +1,4 @@
-import isPasswordsMatched from "../helpers/isPasswordsMatched";
+import sendEmail from "../utils/sendEmail";
 import User from "../models/User";
 import {
   ExpressMiddleware,
