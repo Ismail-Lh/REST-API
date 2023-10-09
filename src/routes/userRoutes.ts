@@ -4,6 +4,7 @@ import {
   getUser,
   updateCurrentUser,
   updatePassword,
+  forgotPassword,
 } from "../controllers/userControllers";
 import {
   checkDuplicateUser,
@@ -11,6 +12,11 @@ import {
 } from "../middlewares/authMiddleware";
 
 const router = Router();
+
+// *@desc   --> Forgot password functionality
+// *@route  --> POST /api/v1/users/forgot-password
+// *@access --> public
+router.route("/forgot-password").post(forgotPassword);
 
 // !: ALL routes after this middleware are protected
 router.use(protectedRoutes);
